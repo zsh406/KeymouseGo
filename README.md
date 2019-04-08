@@ -82,6 +82,9 @@
 > KeymouseGo.exe scripts/0314_1452.txt 3
 ```
 
+# 编译
+使用Python2.7。安装requirements.txt对应安装包，其中wxPython必须安装libs文件夹中的版本。
+安装完之后打开python文件夹的`Lib\site-packages`，找到`wx-<version>-msw`。移动`wx`文件夹至`site-packages`即可正常运行。
 
 ----------------------
 
