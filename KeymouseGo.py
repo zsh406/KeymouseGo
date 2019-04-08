@@ -8,7 +8,7 @@ import sys
 import json
 import win32ui,win32con,pythoncom,win32gui,win32process,win32api
 import ctypes
-
+import random
 
 modules ={'Frame1': [1, 'Main frame of Application', u'Frame1.py']}
 
@@ -35,10 +35,10 @@ def single_run(script_path, times=1):
         
         for i in range(0, l):
             
-            time.sleep(s[i][3]/1000.0)
+
             
             if s[i][0]=='EM':
-
+                time.sleep(s[i][3] / 1000.0)
                 ctypes.windll.user32.SetCursorPos(s[i][2][0], s[i][2][1])
                 
                 if s[i][1]=='mouse left down':
@@ -49,9 +49,13 @@ def single_run(script_path, times=1):
                     win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, 0, 0)
                 elif s[i][1]=='mouse right up':
                     win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP, 0, 0)
+                elif s[i][1] == 'mouse wheel up':
+                    win32api.mouse_event(win32con.MOUSEEVENTF_WHEEL, 1, 0)
+                elif s[i][1] == 'mouse wheel down':
+                    win32api.mouse_event(win32con.MOUSEEVENTF_WHEEL, -1, 0)
                     
             elif s[i][0] =='EK':
-
+                time.sleep(s[i][3] / 1000.0)
                 key_code = s[i][2][0]
                 if key_code >= 160 and key_code <= 165:
                     key_code = (key_code//2) - 64
@@ -60,6 +64,16 @@ def single_run(script_path, times=1):
                     win32api.keybd_event(key_code, 0, 0, 0)  
                 elif s[i][1]=='key up':
                     win32api.keybd_event(key_code, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+            elif s[i][0] == 'ES':  # sleep, time, random time in ms
+                sleep_time = s[i][1]
+                random_time = s[i][2]
+                if sleep_time < 0:
+                    continue
+                if random_time < sleep_time:
+                    random_time = 0
+                delay = random.randint(-random_time, random_time)
+                time.sleep(sleep_time+delay)
 
 
 if __name__ == '__main__':

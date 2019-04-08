@@ -15,7 +15,7 @@ import cStringIO
 import datetime
 import json
 import traceback
-
+import random
 
 wx.NO_3D = 0
 
@@ -433,12 +433,13 @@ class ThreadClass(threading.Thread):
                 
                 for i in range(0,l):
                     
-                    time.sleep(s[i][3]/1000.0)
+                    # time.sleep(s[i][3]/1000.0)
                     
                     if mself.tnumrd.GetLabel() == 'breaked' or mself.tnumrd.GetLabel() == 'finished':
                         break
                     
                     if s[i][0]=='EM':
+                        time.sleep(s[i][3] / 1000.0)
                         # if mself.smode.Value == 0:  #normal mode
 
                         ctypes.windll.user32.SetCursorPos(s[i][2][0], s[i][2][1])
@@ -475,6 +476,7 @@ class ThreadClass(threading.Thread):
                             
 
                     elif s[i][0] =='EK':
+                        time.sleep(s[i][3] / 1000.0)
                         # if mself.smode.Value == 0:  #normal mode
                         key_code = s[i][2][0]
                         if key_code >= 160 and key_code <= 165:
@@ -485,6 +487,15 @@ class ThreadClass(threading.Thread):
                             win32api.keybd_event(key_code, 0, win32con.KEYEVENTF_KEYUP, 0)
                         # else:   #background mode
                         #     pass    #not developed
+                    elif s[i][0] == 'ES':  # sleep, time, random time in ms
+                        sleep_time = s[i][1]
+                        random_time = s[i][2]
+                        if sleep_time < 0:
+                            continue
+                        if random_time < sleep_time:
+                            random_time = 0
+                        delay = random.randint(-random_time, random_time)
+                        time.sleep((sleep_time + delay)/1000)
 
             mself.tnumrd.SetLabel('finished')
             mself.tstop.Shown = False
